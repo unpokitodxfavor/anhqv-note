@@ -1,78 +1,93 @@
-# anhqv-note
-Aplicación de notas y recordatorios.
+# anhqv-note 🚀
+
+**anhqv-note** es una aplicación de productividad de alta gama diseñada para gestionar notas, tareas y objetivos con una estética moderna y funcional. Combina la potencia de la inteligencia artificial con un diseño minimalista y dinámico para ayudarte a alcanzar tu máximo potencial.
 
 ---
 
-# React + TypeScript + Vite
+## ✨ Características Principales
 
-Esta plantilla proporciona una configuración mínima para que React funcione en Vite con HMR (Hot Module Replacement) y algunas reglas de ESLint.
+### 🧠 Editor Inteligente (AI Enhanced)
+- **Simplificación con IA**: Utiliza inteligencia artificial para refinar y resumir tus notas complejas con un solo clic.
+- **Formato Enriquecido**: Toolbar flotante para negritas, cursivas, listas, imágenes y enlaces.
+- **Gestión de Etiquetas Sugeridas**: El sistema sugiere etiquetas basadas en tu contenido para mantener todo organizado.
+- **Colaboración en Tiempo Real**: Visualiza quién más está trabajando en la nota contigo.
 
-Actualmente, hay dos complementos oficiales disponibles:
+### 📊 Panel de Control Pro (Dashboard)
+- **Momento Visual**: Gráficos dinámicos que muestran tu eficiencia y progreso diario.
+- **Enfoque Diario**: Una lista curada de tus tareas más importantes con niveles de prioridad (Alta, Media, Baja).
+- **Métricas de Rendimiento**: Seguimiento de tareas completadas y objetivos restantes para el día.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) usa [Babel](https://babeljs.io/) (o [oxc](https://oxc.rs) cuando se usa en [rolldown-vite](https://vite.dev/guide/rolldown)) para Fast Refresh.
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) usa [SWC](https://swc.rs/) para Fast Refresh.
+### 📈 Análisis de Productividad
+- **Radar de Maestría**: Visualiza tus fortalezas en áreas críticas como Consistencia, Disciplina, Visión y Ejecución.
+- **Mapa de Actividad (Heatmap)**: Registro visual de tu productividad durante los últimos 365 días.
+- **Hitos y Logros**: Sistema de medallas y registro de hitos recientes para mantener la motivación.
 
-## Compilador de React
+### 🌍 Internacionalización Total
+- Soporte completo para **Español** e **Inglés**.
+- Cambio de idioma instantáneo desde la barra lateral.
+- Formateo de fechas adaptado localmente.
 
-El Compilador de React no está habilitado en esta plantilla debido a su impacto en el rendimiento de desarrollo y construcción. Para añadirlo, consulta [esta documentación](https://react.dev/learn/react-compiler/installation).
+---
 
-## Ampliando la configuración de ESLint
+## 🛠️ Tecnologías Utilizadas
 
-Si estás desarrollando una aplicación de producción, te recomendamos actualizar la configuración para habilitar reglas de tipado:
+- **Frontend**: React 19 + TypeScript + Vite.
+- **Estilos**: Tailwind CSS (Glassmorphism & Animaciones Premium).
+- **Animaciones**: Framer Motion.
+- **Iconografía**: Lucide React.
+- **Gráficos**: Recharts.
+- **Backend**: Firebase (Auth & Firestore).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Otras configuraciones...
+---
 
-      // Elimina tseslint.configs.recommended y reemplázalo por esto
-      tseslint.configs.recommendedTypeChecked,
-      // Alternativamente, utiliza esto para reglas más estrictas
-      tseslint.configs.strictTypeChecked,
-      // Opcionalmente, añade esto para reglas de estilo
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Cómo Empezar
 
-      // Otras configuraciones...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // otras opciones...
-    },
-  },
-])
+### Requisitos Previos
+- Node.js (v18 o superior)
+- npm o yarn
+
+### Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/unpokitodxfavor/anhqv-note.git
+   ```
+2. Entra en el directorio:
+   ```bash
+   cd anhqv-note
+   ```
+3. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+### Configuración de Firebase
+Crea un archivo en `src/services/firebase.ts` con tus credenciales de Firebase:
+
+```typescript
+const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROJECT_ID.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+};
 ```
 
-También puedes instalar [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) y [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) para reglas de lint específicas de React:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Otras configuraciones...
-      // Habilita reglas de lint para React
-      reactX.configs['recommended-typescript'],
-      // Habilita reglas de lint para React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // otras opciones...
-    },
-  },
-])
+### Ejecución en Desarrollo
+```bash
+npm run dev
 ```
+
+---
+
+## 🎨 Diseño y Estética
+La aplicación utiliza un diseño **Glassmorphism** con:
+- Fondos oscuros profundos ocupando colores HSL personalizados.
+- Efectos de desenfoque de fondo (backdrop-blur).
+- Animaciones suaves de entrada y micro-interacciones.
+
+---
+
+Desarrollado con ❤️ para optimizar tu visión y ejecución.
