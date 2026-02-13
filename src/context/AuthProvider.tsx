@@ -3,6 +3,7 @@ import {
     onAuthStateChanged,
     signInWithPopup,
     signOut,
+    GoogleAuthProvider,
     type User
 } from 'firebase/auth';
 import { auth, googleProvider, facebookProvider } from '../services/firebase';

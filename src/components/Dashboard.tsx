@@ -6,7 +6,6 @@ import {
     Plus,
     Search,
     Activity,
-    Activity,
     Target,
     Calendar,
     Mail
