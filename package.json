@@ -1,5 +1,6 @@
 {
   "name": "anhqv-note",
+  "description": "Aplicación de notas y recordatorios de alta gama.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

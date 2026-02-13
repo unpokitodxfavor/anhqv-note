@@ -1,24 +1,24 @@
 # anhqv-note
-Aplicacion de notas y recordatorios
+Aplicación de notas y recordatorios.
 
 ---
 
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esta plantilla proporciona una configuración mínima para que React funcione en Vite con HMR (Hot Module Replacement) y algunas reglas de ESLint.
 
-Currently, two official plugins are available:
+Actualmente, hay dos complementos oficiales disponibles:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) usa [Babel](https://babeljs.io/) (o [oxc](https://oxc.rs) cuando se usa en [rolldown-vite](https://vite.dev/guide/rolldown)) para Fast Refresh.
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) usa [SWC](https://swc.rs/) para Fast Refresh.
 
-## React Compiler
+## Compilador de React
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+El Compilador de React no está habilitado en esta plantilla debido a su impacto en el rendimiento de desarrollo y construcción. Para añadirlo, consulta [esta documentación](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+## Ampliando la configuración de ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Si estás desarrollando una aplicación de producción, te recomendamos actualizar la configuración para habilitar reglas de tipado:
 
 ```js
 export default defineConfig([
@@ -26,29 +26,29 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
-      // Other configs...
+      // Otras configuraciones...
 
-      // Remove tseslint.configs.recommended and replace with this
+      // Elimina tseslint.configs.recommended y reemplázalo por esto
       tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
+      // Alternativamente, utiliza esto para reglas más estrictas
       tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
+      // Opcionalmente, añade esto para reglas de estilo
       tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
+      // Otras configuraciones...
     ],
     languageOptions: {
       parserOptions: {
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
         tsconfigRootDir: import.meta.dirname,
       },
-      // other options...
+      // otras opciones...
     },
   },
 ])
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+También puedes instalar [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) y [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) para reglas de lint específicas de React:
 
 ```js
 // eslint.config.js
@@ -60,10 +60,10 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
-      // Other configs...
-      // Enable lint rules for React
+      // Otras configuraciones...
+      // Habilita reglas de lint para React
       reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
+      // Habilita reglas de lint para React DOM
       reactDom.configs.recommended,
     ],
     languageOptions: {
@@ -71,7 +71,7 @@ export default defineConfig([
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
         tsconfigRootDir: import.meta.dirname,
       },
-      // other options...
+      // otras opciones...
     },
   },
 ])
