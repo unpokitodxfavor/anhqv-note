@@ -6,14 +6,37 @@ import {
     Plus,
     Search,
     Activity,
-    Target
+    Activity,
+    Target,
+    Calendar,
+    Mail
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageProvider';
+import { useAuth } from '../context/AuthProvider';
+import { fetchCalendarEvents, fetchGmailThreads, type CalendarEvent, type GmailThread } from '../services/googleServices';
 
 export const Dashboard: React.FC = () => {
     const [isEditorOpen, setIsEditorOpen] = useState(false);
     const [activeView, setActiveView] = useState<'dashboard' | 'analytics'>('dashboard');
     const { t, language } = useLanguage();
+    const { googleToken } = useAuth();
+    const [googleData, setGoogleData] = useState<{ events: CalendarEvent[], emails: GmailThread[] }>({ events: [], emails: [] });
+    const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+
+    React.useEffect(() => {
+        if (googleToken && activeView === 'dashboard') {
+            const loadGoogleData = async () => {
+                setIsLoadingGoogle(true);
+                const [events, emails] = await Promise.all([
+                    fetchCalendarEvents(googleToken),
+                    fetchGmailThreads(googleToken)
+                ]);
+                setGoogleData({ events, emails });
+                setIsLoadingGoogle(false);
+            };
+            loadGoogleData();
+        }
+    }, [googleToken, activeView]);
 
     const formatDate = (date: Date) => {
         return new Intl.DateTimeFormat(language === 'es' ? 'es-ES' : 'en-US', {
@@ -65,42 +88,98 @@ export const Dashboard: React.FC = () => {
             </section>
 
             {/* Today's Focus List */}
-            <section className="max-w-4xl">
-                <h3 className="text-lg font-semibold mb-4 text-text-main">{t('todays_focus')}</h3>
-                <div className="space-y-3">
-                    {[
-                        { title: t('task_1'), area: t('area_work'), tag: t('priority_high') },
-                        { title: t('task_2'), area: t('area_learning'), tag: t('priority_med') },
-                        { title: t('task_3'), area: t('area_personal'), tag: t('priority_low') }
-                    ].map((task, i) => (
-                        <div
-                            key={i}
-                            onClick={() => setIsEditorOpen(true)}
-                            className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 cursor-pointer group transition-all"
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="w-6 h-6 rounded-full border-2 border-primary/40 group-hover:border-primary transition-colors"></div>
-                                <div>
-                                    <p className="font-medium">{task.title}</p>
-                                    <p className="text-xs text-text-dim flex items-center gap-2">
-                                        <span className="text-accent-cyan">{task.area}</span>
-                                        <span>•</span>
-                                        <span>{task.tag} {t('priority_label')}</span>
-                                    </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <section>
+                    <h3 className="text-lg font-semibold mb-4 text-text-main">{t('todays_focus')}</h3>
+                    <div className="space-y-3">
+                        {[
+                            { title: t('task_1'), area: t('area_work'), tag: t('priority_high') },
+                            { title: t('task_2'), area: t('area_learning'), tag: t('priority_med') },
+                            { title: t('task_3'), area: t('area_personal'), tag: t('priority_low') }
+                        ].map((task, i) => (
+                            <div
+                                key={i}
+                                onClick={() => setIsEditorOpen(true)}
+                                className="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 cursor-pointer group transition-all"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className="w-6 h-6 rounded-full border-2 border-primary/40 group-hover:border-primary transition-colors"></div>
+                                    <div>
+                                        <p className="font-medium">{task.title}</p>
+                                        <p className="text-xs text-text-dim flex items-center gap-2">
+                                            <span className="text-accent-cyan">{task.area}</span>
+                                            <span>•</span>
+                                            <span>{task.tag} {t('priority_label')}</span>
+                                        </p>
+                                    </div>
                                 </div>
+                                <Plus size={18} className="text-text-dim group-hover:text-white rotate-45" />
                             </div>
-                            <Plus size={18} className="text-text-dim group-hover:text-white rotate-45" />
+                        ))}
+                        <button
+                            onClick={() => setIsEditorOpen(true)}
+                            className="w-full py-4 border-2 border-dashed border-white/5 rounded-xl text-text-dim hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2"
+                        >
+                            <Plus size={20} />
+                            <span>{t('add_task')}</span>
+                        </button>
+                    </div>
+                </section>
+
+                {/* Google Integration Section */}
+                <section>
+                    <h3 className="text-lg font-semibold mb-4 text-text-main flex items-center gap-2">
+                        Google Workspace
+                        {isLoadingGoogle && <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />}
+                    </h3>
+                    <div className="space-y-6">
+                        {/* Calendar Events */}
+                        <div className="space-y-3">
+                            <p className="text-xs font-bold text-text-dim uppercase tracking-wider flex items-center gap-2">
+                                <Calendar size={14} className="text-primary" />
+                                {language === 'es' ? 'Próximos Eventos' : 'Upcoming Events'}
+                            </p>
+                            {googleData.events.length > 0 ? (
+                                googleData.events.map(event => (
+                                    <div key={event.id} className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1">
+                                        <p className="text-sm font-medium text-white">{event.summary}</p>
+                                        <p className="text-[10px] text-text-dim">
+                                            {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : (language === 'es' ? 'Todo el día' : 'All day')}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-xs text-text-dim italic px-4">
+                                    {googleToken ? (language === 'es' ? 'No hay eventos próximos' : 'No upcoming events') : (language === 'es' ? 'Inicia sesión con Google para ver eventos' : 'Sign in with Google to see events')}
+                                </p>
+                            )}
                         </div>
-                    ))}
-                    <button
-                        onClick={() => setIsEditorOpen(true)}
-                        className="w-full py-4 border-2 border-dashed border-white/5 rounded-xl text-text-dim hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2"
-                    >
-                        <Plus size={20} />
-                        <span>{t('add_task')}</span>
-                    </button>
-                </div>
-            </section>
+
+                        {/* Gmail Messages */}
+                        <div className="space-y-3">
+                            <p className="text-xs font-bold text-text-dim uppercase tracking-wider flex items-center gap-2">
+                                <Mail size={14} className="text-accent-cyan" />
+                                {language === 'es' ? 'Correos Pendientes' : 'Pending Emails'}
+                            </p>
+                            {googleData.emails.length > 0 ? (
+                                googleData.emails.map(email => (
+                                    <div key={email.id} className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1 hover:bg-white/5 transition-colors cursor-pointer">
+                                        <div className="flex justify-between items-start">
+                                            <p className="text-sm font-medium text-white truncate flex-1">{email.subject}</p>
+                                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20 ml-2">GMAIL</span>
+                                        </div>
+                                        <p className="text-[10px] text-text-dim truncate">{email.from}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-xs text-text-dim italic px-4">
+                                    {googleToken ? (language === 'es' ? 'No hay correos nuevos' : 'No new emails') : (language === 'es' ? 'Inicia sesión con Google para ver correos' : 'Sign in with Google to see emails')}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 

@@ -14,6 +14,7 @@ interface AuthContextType {
     loginWithFacebook: () => Promise<void>;
     logout: () => Promise<void>;
     isMock: boolean;
+    googleToken: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [isMock, setIsMock] = useState(false);
+    const [googleToken, setGoogleToken] = useState<string | null>(() => localStorage.getItem('google_token'));
 
     useEffect(() => {
         // Check if we are using placeholder keys
@@ -58,7 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return;
         }
         try {
-            await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential?.accessToken || null;
+            if (token) {
+                setGoogleToken(token);
+                localStorage.setItem('google_token', token);
+            }
         } catch (error) {
             console.error("Google login error:", error);
         }
@@ -81,6 +89,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             return Promise.resolve();
         }
+        setGoogleToken(null);
+        localStorage.removeItem('google_token');
         return signOut(auth);
     };
 
@@ -91,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginWithFacebook,
         logout,
         isMock,
+        googleToken,
     };
 
     return (
