@@ -15,6 +15,7 @@ export const translations = {
         nav_analytics: "Analytics",
         nav_tasks: "All Tasks",
         nav_projects: "Projects",
+        nav_calendar: "Calendar",
 
         // Dashboard
         greeting: "Good Morning",
@@ -94,6 +95,12 @@ export const translations = {
         task_status_done: "Completed",
         ai_insight: "AI Insight",
         suggested_priority: "Suggested Priority",
+        upcoming_events: "Upcoming Events",
+        pending_emails: "Recent Emails",
+        connect_google: "Connect Google Workspace",
+        no_events: "No upcoming events",
+        no_emails: "No new emails",
+        sign_in_google_to_see: "Sign in with Google to see your events and emails",
     },
     es: {
         // Auth & General
@@ -111,6 +118,7 @@ export const translations = {
         nav_analytics: "Análisis",
         nav_tasks: "Todas las Tareas",
         nav_projects: "Proyectos",
+        nav_calendar: "Calendario",
 
         // Dashboard
         greeting: "Buen Día",
@@ -190,6 +198,12 @@ export const translations = {
         task_status_done: "Completadas",
         ai_insight: "Insight de IA",
         suggested_priority: "Prioridad Sugerida",
+        upcoming_events: "Próximos Eventos",
+        pending_emails: "Correos Recientes",
+        connect_google: "Conectar Google Workspace",
+        no_events: "No hay eventos próximos",
+        no_emails: "No hay correos nuevos",
+        sign_in_google_to_see: "Inicia sesión con Google para ver tus eventos y correos",
     }
 };
 

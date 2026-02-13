@@ -9,7 +9,8 @@ import {
     Activity,
     Target,
     Calendar,
-    Mail
+    Mail,
+    Menu
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageProvider';
 import { useAuth } from '../context/AuthProvider';
@@ -33,10 +34,11 @@ interface Task {
 }
 
 export const Dashboard: React.FC = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isEditorOpen, setIsEditorOpen] = useState(false);
-    const [activeView, setActiveView] = useState<'dashboard' | 'analytics' | 'tasks' | 'projects'>('dashboard');
+    const [activeView, setActiveView] = useState<'dashboard' | 'analytics' | 'tasks' | 'projects' | 'calendar'>('dashboard');
     const { t, language } = useLanguage();
-    const { googleToken } = useAuth();
+    const { loginWithGoogle, googleToken } = useAuth();
     const [googleData, setGoogleData] = useState<{ events: CalendarEvent[], emails: GmailThread[] }>({ events: [], emails: [] });
     const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
 
@@ -80,17 +82,24 @@ export const Dashboard: React.FC = () => {
         setTasks(prev => prev.filter(t => t.id !== id));
     };
 
+    const loadGoogleData = async () => {
+        if (!googleToken) return;
+        setIsLoadingGoogle(true);
+        try {
+            const [events, emails] = await Promise.all([
+                fetchCalendarEvents(googleToken),
+                fetchGmailThreads(googleToken)
+            ]);
+            setGoogleData({ events, emails });
+        } catch (error) {
+            console.error("Error loading Google data:", error);
+        } finally {
+            setIsLoadingGoogle(false);
+        }
+    };
+
     React.useEffect(() => {
-        if (googleToken && activeView === 'dashboard') {
-            const loadGoogleData = async () => {
-                setIsLoadingGoogle(true);
-                const [events, emails] = await Promise.all([
-                    fetchCalendarEvents(googleToken),
-                    fetchGmailThreads(googleToken)
-                ]);
-                setGoogleData({ events, emails });
-                setIsLoadingGoogle(false);
-            };
+        if (googleToken && (activeView === 'dashboard' || activeView === 'calendar')) {
             loadGoogleData();
         }
     }, [googleToken, activeView]);
@@ -104,7 +113,7 @@ export const Dashboard: React.FC = () => {
     };
 
     const renderDashboard = () => (
-        <div className="px-10 pb-10 space-y-10">
+        <div className="space-y-10">
             {/* Visual Momentum Section */}
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
@@ -232,27 +241,44 @@ export const Dashboard: React.FC = () => {
                     <div className="space-y-6">
                         {/* Calendar Events */}
                         <div className="space-y-3">
-                            <p className="text-xs font-bold text-text-dim uppercase tracking-wider flex items-center gap-2">
-                                <Calendar size={14} className="text-primary" />
-                                {language === 'es' ? 'Próximos Eventos' : 'Upcoming Events'}
-                            </p>
-                            {googleData.events.length > 0 ? (
-                                googleData.events.map(event => (
-                                    <motion.div
-                                        whileHover={{ x: 5 }}
-                                        key={event.id}
-                                        className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1"
-                                    >
-                                        <p className="text-sm font-medium text-white">{event.summary}</p>
-                                        <p className="text-[10px] text-text-dim">
-                                            {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : (language === 'es' ? 'Todo el día' : 'All day')}
-                                        </p>
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <p className="text-xs text-text-dim italic px-4">
-                                    {googleToken ? (language === 'es' ? 'No hay eventos próximos' : 'No upcoming events') : (language === 'es' ? 'Inicia sesión con Google para ver eventos' : 'Sign in with Google to see events')}
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-text-dim uppercase tracking-wider flex items-center gap-2">
+                                    <Calendar size={14} className="text-primary" />
+                                    {t('upcoming_events')}
                                 </p>
+                                {googleToken && (
+                                    <button onClick={loadGoogleData} className="text-[10px] text-primary hover:underline">
+                                        {language === 'es' ? 'Actualizar' : 'Refresh'}
+                                    </button>
+                                )}
+                            </div>
+                            {googleToken ? (
+                                googleData.events.length > 0 ? (
+                                    googleData.events.map(event => (
+                                        <motion.div
+                                            whileHover={{ x: 5 }}
+                                            key={event.id}
+                                            className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1"
+                                        >
+                                            <p className="text-sm font-medium text-white">{event.summary}</p>
+                                            <p className="text-[10px] text-text-dim">
+                                                {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : t('all_day' as any)}
+                                            </p>
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <p className="text-xs text-text-dim italic px-4">{t('no_events')}</p>
+                                )
+                            ) : (
+                                <div className="glass p-6 rounded-2xl border border-dashed border-white/10 flex flex-col items-center text-center gap-3">
+                                    <p className="text-xs text-text-dim">{t('sign_in_google_to_see')}</p>
+                                    <button
+                                        onClick={loginWithGoogle}
+                                        className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline"
+                                    >
+                                        {t('connect_google')}
+                                    </button>
+                                </div>
                             )}
                         </div>
 
@@ -260,27 +286,27 @@ export const Dashboard: React.FC = () => {
                         <div className="space-y-3">
                             <p className="text-xs font-bold text-text-dim uppercase tracking-wider flex items-center gap-2">
                                 <Mail size={14} className="text-accent-cyan" />
-                                {language === 'es' ? 'Correos Pendientes' : 'Pending Emails'}
+                                {t('pending_emails')}
                             </p>
-                            {googleData.emails.length > 0 ? (
-                                googleData.emails.map(email => (
-                                    <motion.div
-                                        whileHover={{ x: 5 }}
-                                        key={email.id}
-                                        className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1 hover:bg-white/5 transition-colors cursor-pointer"
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <p className="text-sm font-medium text-white truncate flex-1">{email.subject}</p>
-                                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20 ml-2">GMAIL</span>
-                                        </div>
-                                        <p className="text-[10px] text-text-dim truncate">{email.from}</p>
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <p className="text-xs text-text-dim italic px-4">
-                                    {googleToken ? (language === 'es' ? 'No hay correos nuevos' : 'No new emails') : (language === 'es' ? 'Inicia sesión con Google para ver correos' : 'Sign in with Google to see emails')}
-                                </p>
-                            )}
+                            {googleToken ? (
+                                googleData.emails.length > 0 ? (
+                                    googleData.emails.map(email => (
+                                        <motion.div
+                                            whileHover={{ x: 5 }}
+                                            key={email.id}
+                                            className="glass p-4 rounded-xl border border-white/5 flex flex-col gap-1 hover:bg-white/5 transition-colors cursor-pointer"
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <p className="text-sm font-medium text-white truncate flex-1">{email.subject}</p>
+                                                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20 ml-2">GMAIL</span>
+                                            </div>
+                                            <p className="text-[10px] text-text-dim truncate">{email.from}</p>
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <p className="text-xs text-text-dim italic px-4">{t('no_emails')}</p>
+                                )
+                            ) : null}
                         </div>
                     </div>
                 </motion.section>
@@ -296,7 +322,7 @@ export const Dashboard: React.FC = () => {
         ];
 
         return (
-            <div className="px-10 pb-10 flex gap-6 overflow-x-auto min-h-[calc(100vh-180px)] custom-scrollbar">
+            <div className="flex gap-6 overflow-x-auto min-h-[calc(100vh-220px)] custom-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
                 {columns.map(col => (
                     <div key={col.id} className="flex-1 min-w-[320px] max-w-[400px]">
                         <div className="flex items-center gap-3 mb-6 px-2">
@@ -380,7 +406,7 @@ export const Dashboard: React.FC = () => {
     };
 
     const renderProjects = () => (
-        <div className="px-10 pb-10 space-y-10">
+        <div className="space-y-10">
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -416,39 +442,142 @@ export const Dashboard: React.FC = () => {
         </div>
     );
 
+    const renderCalendar = () => (
+        <div className="space-y-10">
+            <motion.section
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass-heavy p-10 rounded-[40px] border border-white/10"
+            >
+                <div className="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-2">{t('nav_calendar')}</h3>
+                        <p className="text-text-dim text-sm">{language === 'es' ? 'Tu agenda sincronizada con Google' : 'Your schedule synchronized with Google'}</p>
+                    </div>
+                    {googleToken && (
+                        <button
+                            onClick={loadGoogleData}
+                            className={`p-3 rounded-2xl glass hover:bg-white/10 transition-all ${isLoadingGoogle ? 'animate-spin' : ''}`}
+                        >
+                            <Activity size={20} className="text-primary" />
+                        </button>
+                    )}
+                </div>
+
+                {!googleToken ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center gap-6">
+                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Calendar size={40} className="text-primary" />
+                        </div>
+                        <div className="space-y-2">
+                            <h4 className="text-xl font-bold text-white">{t('connect_google')}</h4>
+                            <p className="text-sm text-text-dim max-w-sm">{t('sign_in_google_to_see')}</p>
+                        </div>
+                        <button
+                            onClick={loginWithGoogle}
+                            className="btn-primary px-8 py-3"
+                        >
+                            <Plus size={20} />
+                            <span>{t('connect_google')}</span>
+                        </button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {googleData.events.length > 0 ? (
+                            googleData.events.map((event, i) => (
+                                <motion.div
+                                    key={event.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    whileHover={{ y: -5 }}
+                                    className="glass p-6 rounded-3xl border border-white/5 relative group"
+                                >
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-start">
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
+                                                {event.start.dateTime ? new Date(event.start.dateTime).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { day: 'numeric', month: 'short' }) : 'Hoy'}
+                                            </span>
+                                            <span className="text-[10px] text-text-dim font-bold">
+                                                {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : 'Todo el día'}
+                                            </span>
+                                        </div>
+                                        <h4 className="font-bold text-white text-lg leading-tight group-hover:text-primary transition-colors">{event.summary}</h4>
+                                        {event.description && (
+                                            <p className="text-xs text-text-dim line-clamp-2 italic">"{event.description}"</p>
+                                        )}
+                                    </div>
+                                    <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500 overflow-hidden">
+                                        <div className="absolute -inset-20 bg-primary/10 blur-[40px] translate-x-1/2 translate-y-1/2"></div>
+                                    </div>
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="col-span-full py-20 flex flex-col items-center gap-4 opacity-50">
+                                <Calendar size={48} className="text-text-dim" />
+                                <p className="text-sm font-bold uppercase tracking-widest text-text-dim">{t('no_events')}</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </motion.section>
+        </div>
+    );
+
     const renderCurrentView = () => {
         switch (activeView) {
             case 'dashboard': return renderDashboard();
             case 'analytics': return <Analytics />;
             case 'tasks': return renderTasks();
             case 'projects': return renderProjects();
+            case 'calendar': return renderCalendar();
             default: return renderDashboard();
         }
     };
 
     return (
         <div className="flex h-screen bg-bg-main overflow-hidden">
-            <Sidebar activeView={activeView} onViewChange={setActiveView} />
+            <Sidebar
+                activeView={activeView}
+                onViewChange={setActiveView}
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+            />
 
             <main className="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
                 {/* Header */}
-                <header className="px-10 py-8 flex items-center justify-between sticky top-0 bg-bg-main/50 backdrop-blur-md z-10">
-                    <div>
-                        <p className="text-text-dim text-sm font-medium mb-1 capitalize">{formatDate(new Date())}</p>
-                        <h2 className="text-3xl font-bold flex items-center gap-2">
-                            {activeView === 'dashboard' ? `${t('greeting')}, Clemente` :
-                                activeView === 'analytics' ? t('performance_overview') :
-                                    activeView === 'tasks' ? t('nav_tasks') : t('nav_projects')} <span className="animate-wave">👋</span>
-                        </h2>
+                <header className="px-6 lg:px-10 py-6 lg:py-8 flex items-center justify-between sticky top-0 bg-bg-main/50 backdrop-blur-md z-10">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(true)}
+                            className="p-2 -ml-2 rounded-xl bg-white/5 text-text-dim hover:text-white lg:hidden"
+                        >
+                            <Menu size={24} />
+                        </button>
+                        <div>
+                            <p className="hidden sm:block text-text-dim text-[10px] lg:text-sm font-medium mb-1 capitalize">{formatDate(new Date())}</p>
+                            <h2 className="text-xl lg:text-3xl font-bold flex items-center gap-2">
+                                {activeView === 'dashboard' ? (
+                                    <span className="truncate">{t('greeting')}, Clemente</span>
+                                ) : (
+                                    <span className="truncate">
+                                        {activeView === 'analytics' ? t('performance_overview') :
+                                            activeView === 'tasks' ? t('nav_tasks') :
+                                                activeView === 'calendar' ? t('nav_calendar') : t('nav_projects')}
+                                    </span>
+                                )}
+                                <span className="animate-wave hidden sm:inline">👋</span>
+                            </h2>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="glass px-4 py-2 rounded-xl flex items-center gap-2 border border-white/5">
+                    <div className="flex items-center gap-2 lg:gap-4">
+                        <div className="hidden md:flex glass px-4 py-2 rounded-xl items-center gap-2 border border-white/5">
                             <Search size={18} className="text-text-dim" />
                             <input
                                 type="text"
                                 placeholder={t('search_placeholder')}
-                                className="bg-transparent border-none outline-none text-sm text-white w-40 placeholder:text-text-dim"
+                                className="bg-transparent border-none outline-none text-sm text-white w-20 lg:w-40 placeholder:text-text-dim"
                             />
                         </div>
                         <motion.button
@@ -456,15 +585,17 @@ export const Dashboard: React.FC = () => {
                             whileTap={{ scale: 0.95 }}
                             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                             onClick={() => setIsEditorOpen(true)}
-                            className="btn-primary"
+                            className="btn-primary px-4 lg:px-6 py-2.5 lg:py-3"
                         >
                             <Plus size={20} />
-                            <span>{activeView === 'dashboard' ? t('new_task') : t('new_goal')}</span>
+                            <span className="hidden sm:inline">{activeView === 'dashboard' ? t('new_task') : t('new_goal')}</span>
                         </motion.button>
                     </div>
                 </header>
 
-                {renderCurrentView()}
+                <div className="px-4 lg:px-10 pb-10">
+                    {renderCurrentView()}
+                </div>
             </main>
 
             <NoteEditor isOpen={isEditorOpen} onClose={() => setIsEditorOpen(false)} />
