@@ -41,11 +41,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isPlaceholder) {
             console.warn("Using Mock Auth because Firebase keys are placeholders.");
             setIsMock(true);
-            // Simulate a small delay for premium feel
-            const timer = setTimeout(() => {
-                setLoading(false);
-            }, 800);
-            return () => clearTimeout(timer);
+            setLoading(false);
+            return;
         }
 
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -68,8 +65,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setGoogleToken(token);
                 localStorage.setItem('google_token', token);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Google login error:", error);
+            alert(`Error de inicio de sesión con Google: ${error.message} (${error.code})`);
         }
     };
 

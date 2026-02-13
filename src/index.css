@@ -6,9 +6,9 @@
   --bg-glass-heavy: rgba(255, 255, 255, 0.1);
 
   --primary: #7f13ec;
-  /* Deep Purple */
+  --primary-glow: rgba(127, 19, 236, 0.5);
   --secondary: #0df259;
-  /* Emerald */
+  --secondary-glow: rgba(13, 242, 89, 0.4);
   --accent-cyan: #00f2ff;
   --accent-pink: #ff007a;
 
@@ -16,21 +16,21 @@
   --text-muted: #a0a0b8;
   --text-dim: #6b6b83;
 
-  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glass: rgba(255, 255, 255, 0.08);
   --border-accent: rgba(127, 19, 236, 0.3);
 
-  --shadow-glow: 0 0 20px rgba(127, 19, 236, 0.2);
-  --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.6);
 
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --font-fancy: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 24px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 32px;
   --radius-full: 9999px;
 
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes wave {
@@ -92,17 +92,45 @@ h4 {
 
 /* Glassmorphism Utilities */
 .glass {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
+  transition: var(--transition-smooth);
+}
+
+.glass:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .glass-heavy {
-  background: var(--bg-glass-heavy);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border-glass);
+}
+
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(127, 19, 236, 0.15) 0%,
+      transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
 }
 
 .glow {
@@ -533,7 +561,7 @@ h4 {
   border-top-right-radius: 2px;
 }
 
-.text-[10px] {
+.text-\[10px\] {
   font-size: 10px;
 }
 
@@ -897,4 +925,33 @@ h4 {
 
 .hover\:underline:hover {
   text-decoration: underline;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%);
+  animation: shimmer 2s infinite;
 }

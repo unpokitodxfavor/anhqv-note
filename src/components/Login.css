@@ -1,0 +1,158 @@
+/* Dedicated Login Styles */
+.login-container {
+    width: 100% !important;
+    max-width: 448px !important;
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+}
+
+.login-form-area {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+    width: 100% !important;
+    margin-top: 24px !important;
+    box-sizing: border-box !important;
+}
+
+.login-input-group {
+    position: relative !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.login-input {
+    width: 100% !important;
+    background: rgba(26, 21, 37, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 18px 16px 18px 52px !important;
+    color: white !important;
+    font-family: inherit !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+    height: 60px !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.login-input:focus {
+    border-color: #7f13ec !important;
+    background: rgba(36, 26, 50, 1) !important;
+    box-shadow: 0 0 0 2px rgba(127, 19, 236, 0.3) !important;
+}
+
+.login-input::placeholder {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.login-btn-purple {
+    width: 100% !important;
+    padding: 16px !important;
+    background: #6d28d9 !important;
+    border-radius: 16px !important;
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 10px 30px rgba(109, 40, 217, 0.3) !important;
+    transition: all 0.3s ease !important;
+    height: 60px !important;
+    margin-top: 10px !important;
+}
+
+.login-btn-purple:hover {
+    background: #7c3aed !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 15px 35px rgba(109, 40, 217, 0.4) !important;
+}
+
+.login-divider {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin-bottom: 32px !important;
+    margin-top: 32px !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "" !important;
+    flex: 1 !important;
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.login-divider span {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.15em !important;
+    white-space: nowrap !important;
+}
+
+.login-btn-google {
+    width: 100% !important;
+    padding: 16px !important;
+    background: rgba(26, 21, 37, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    cursor: pointer !important;
+    color: white !important;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+    height: 60px !important;
+}
+
+.login-btn-google:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.login-footer-link {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #4cc9f0 !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 12px 24px !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+    margin-top: 20px !important;
+    text-decoration: none !important;
+}
+
+.login-footer-link:hover {
+    color: white !important;
+    text-shadow: 0 0 10px rgba(76, 201, 240, 0.5) !important;
+}
+
+.login-icon-overlay {
+    position: absolute !important;
+    left: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    pointer-events: none !important;
+    z-index: 20 !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}

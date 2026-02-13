@@ -89,6 +89,11 @@ export const translations = {
         task_1: "Finalize anhqv-note implementation plan",
         task_2: "Research glassmorphic animation patterns",
         task_3: "Evening meditation & reflection",
+        task_status_todo: "To Do",
+        task_status_in_progress: "In Progress",
+        task_status_done: "Completed",
+        ai_insight: "AI Insight",
+        suggested_priority: "Suggested Priority",
     },
     es: {
         // Auth & General
@@ -180,6 +185,11 @@ export const translations = {
         task_1: "Finalizar plan de implementación de anhqv-note",
         task_2: "Investigar patrones de animación glassmorphic",
         task_3: "Meditación y reflexión nocturna",
+        task_status_todo: "Pendientes",
+        task_status_in_progress: "En Progreso",
+        task_status_done: "Completadas",
+        ai_insight: "Insight de IA",
+        suggested_priority: "Prioridad Sugerida",
     }
 };
 
