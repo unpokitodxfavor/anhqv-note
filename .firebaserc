@@ -1,5 +1,7 @@
 {
-  "projects": {},
+  "projects": {
+    "default": "anhqv-note-app"
+  },
   "targets": {},
   "etags": {}
 }

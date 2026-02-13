@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 
 // TODO: Replace with your Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAos57Ls9a2F5Dcl9ALelcrEMV4TbXgwLo",
-    authDomain: "anhqv-note-clemente-1337.firebaseapp.com",
-    projectId: "anhqv-note-clemente-1337",
-    storageBucket: "anhqv-note-clemente-1337.firebasestorage.app",
-    messagingSenderId: "857498246633",
-    appId: "1:857498246633:web:cf1c182f0d63a0e459bf78"
+    apiKey: "AIzaSyAZkPTbNVAZkt1CoV_Vpfj5rrPpZrt_B5M",
+    authDomain: "anhqv-note-app.firebaseapp.com",
+    projectId: "anhqv-note-app",
+    storageBucket: "anhqv-note-app.firebasestorage.app",
+    messagingSenderId: "49865958912",
+    appId: "1:49865958912:web:a75e6a5f6ae3da58fb5ae5"
 };
 
 const app = initializeApp(firebaseConfig);
