@@ -10,7 +10,8 @@ import {
     Target,
     Calendar,
     Mail,
-    Menu
+    Menu,
+    Sparkles
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageProvider';
 import { useAuth } from '../context/AuthProvider';
@@ -41,6 +42,7 @@ export const Dashboard: React.FC = () => {
     const { loginWithGoogle, googleToken } = useAuth();
     const [googleData, setGoogleData] = useState<{ events: CalendarEvent[], emails: GmailThread[] }>({ events: [], emails: [] });
     const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+    const [googleError, setGoogleError] = useState<string | null>(null);
 
     const [tasks, setTasks] = useState<Task[]>([
         {
@@ -85,14 +87,16 @@ export const Dashboard: React.FC = () => {
     const loadGoogleData = async () => {
         if (!googleToken) return;
         setIsLoadingGoogle(true);
+        setGoogleError(null);
         try {
             const [events, emails] = await Promise.all([
-                fetchCalendarEvents(googleToken),
-                fetchGmailThreads(googleToken)
+                fetchCalendarEvents(googleToken).catch(e => { throw e; }),
+                fetchGmailThreads(googleToken).catch(() => []) // Gmail is secondary
             ]);
             setGoogleData({ events, emails });
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error loading Google data:", error);
+            setGoogleError(error.message || "Error al conectar con Google");
         } finally {
             setIsLoadingGoogle(false);
         }
@@ -253,7 +257,17 @@ export const Dashboard: React.FC = () => {
                                 )}
                             </div>
                             {googleToken ? (
-                                googleData.events.length > 0 ? (
+                                googleError ? (
+                                    <div className="glass p-6 rounded-2xl border border-accent-pink/20 flex flex-col items-center text-center gap-3">
+                                        <p className="text-xs text-accent-pink font-medium">{googleError}</p>
+                                        <button
+                                            onClick={loginWithGoogle}
+                                            className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline"
+                                        >
+                                            {language === 'es' ? 'Autorizar de nuevo' : 'Re-authorize'}
+                                        </button>
+                                    </div>
+                                ) : googleData.events.length > 0 ? (
                                     googleData.events.map(event => (
                                         <motion.div
                                             whileHover={{ x: 5 }}
@@ -262,7 +276,7 @@ export const Dashboard: React.FC = () => {
                                         >
                                             <p className="text-sm font-medium text-white">{event.summary}</p>
                                             <p className="text-[10px] text-text-dim">
-                                                {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : t('all_day' as any)}
+                                                {event.start.dateTime ? new Date(event.start.dateTime).toLocaleTimeString(language === 'es' ? 'es-ES' : 'en-US', { hour: '2-digit', minute: '2-digit' }) : (language === 'es' ? 'Todo el día' : 'All day')}
                                             </p>
                                         </motion.div>
                                     ))
@@ -479,6 +493,23 @@ export const Dashboard: React.FC = () => {
                         >
                             <Plus size={20} />
                             <span>{t('connect_google')}</span>
+                        </button>
+                    </div>
+                ) : googleError ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center gap-6">
+                        <div className="w-20 h-20 rounded-full bg-accent-pink/10 flex items-center justify-center">
+                            <Calendar size={40} className="text-accent-pink" />
+                        </div>
+                        <div className="space-y-2">
+                            <h4 className="text-xl font-bold text-white">{language === 'es' ? 'Error de Acceso' : 'Access Error'}</h4>
+                            <p className="text-sm text-text-dim max-w-sm">{googleError}</p>
+                        </div>
+                        <button
+                            onClick={loginWithGoogle}
+                            className="btn-primary bg-accent-pink hover:shadow-accent-pink/20 px-8 py-3"
+                        >
+                            <Sparkles size={20} />
+                            <span>{language === 'es' ? 'Solicitar Permisos' : 'Grant Permissions'}</span>
                         </button>
                     </div>
                 ) : (

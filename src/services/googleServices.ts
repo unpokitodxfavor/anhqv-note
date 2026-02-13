@@ -32,14 +32,15 @@ export const fetchCalendarEvents = async (token: string): Promise<CalendarEvent[
         );
 
         if (!response.ok) {
-            throw new Error('Failed to fetch calendar events');
+            const errorBody = await response.json();
+            throw new Error(errorBody.error?.message || 'Failed to fetch calendar events');
         }
 
         const data = await response.json();
         return data.items || [];
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error fetching Google Calendar:", error);
-        return [];
+        throw error;
     }
 };
 
