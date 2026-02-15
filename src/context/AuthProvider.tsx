@@ -47,6 +47,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            // If we have a user but no state token, check localStorage
+            if (currentUser && !googleToken) {
+                const storedToken = localStorage.getItem('google_token');
+                if (storedToken) setGoogleToken(storedToken);
+            }
             setLoading(false);
         });
         return () => unsubscribe();

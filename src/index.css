@@ -1,7 +1,7 @@
 :root {
   /* Color Palette - Premium Dark Mode */
   --bg-main: #0a0514;
-  --bg-sidebar: rgba(18, 10, 31, 0.8);
+  --bg-sidebar: #0d071a;
   --bg-glass: rgba(255, 255, 255, 0.05);
   --bg-glass-heavy: rgba(255, 255, 255, 0.1);
 
@@ -232,6 +232,37 @@ h4 {
 
 @media (min-width: 768px) {
   .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:block {
+    display: block;
+  }
+
+  .md\:pl-80 {
+    padding-left: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:pl-10 {
+    padding-left: 40px;
+  }
+
+  .lg\:py-10 {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .lg\:pl-80 {
+    padding-left: 320px;
+  }
+
+  .lg\:flex {
+    display: flex;
+  }
+
+  .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -701,6 +732,18 @@ h4 {
   background: rgba(0, 242, 255, 0.6);
 }
 
+.bg-accent-cyan\/40 {
+  background: rgba(0, 242, 255, 0.4);
+}
+
+.shadow-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+}
+
+.bg-bg-sidebar\/80 {
+  background: rgba(13, 7, 26, 0.8);
+}
+
 .bg-white\/2 {
   background: rgba(255, 255, 255, 0.02);
 }
@@ -823,8 +866,32 @@ h4 {
   opacity: 0.1;
 }
 
+.opacity-40 {
+  opacity: 0.4;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
 .group:hover .opacity-20 {
   opacity: 0.2;
+}
+
+.blur-md {
+  filter: blur(8px);
+}
+
+.blur-0 {
+  filter: blur(0);
+}
+
+.scale-96 {
+  transform: scale(0.96);
+}
+
+.scale-100 {
+  transform: scale(1);
 }
 
 .cursor-pointer {

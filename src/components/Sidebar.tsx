@@ -5,11 +5,11 @@ import {
   Layout,
   BarChart3,
   LogOut,
-  Sparkles,
   CheckSquare,
   Folder,
   Calendar,
-  Languages
+  Languages,
+  X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthProvider';
 import { useLanguage } from '../context/LanguageProvider';
@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, isOp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-40"
         />
       )}
 
@@ -54,34 +54,38 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, isOp
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         className={`
-          fixed inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-white/5 flex flex-col p-6 h-full 
-          lg:static lg:translate-x-0
+          fixed inset-y-0 left-0 z-50 w-72 bg-bg-sidebar shadow-[0_0_50px_rgba(0,0,0,0.5)] border-r border-white/5 flex flex-col p-6 h-full
         `}
       >
-        {/* Close button for mobile */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-xl bg-white/5 text-text-dim hover:text-white lg:hidden"
-        >
-          <LogOut size={20} className="rotate-180" />
-        </button>
+        {/* Sidebar Header: Brand & Close Toggle */}
+        <div className="flex items-center justify-between mb-12">
+          <motion.button
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={() => onViewChange('dashboard')}
+            className="flex flex-col gap-1 items-start bg-transparent border-none p-0 outline-none hover:opacity-80 transition-opacity cursor-pointer group"
+          >
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-black tracking-tighter text-white group-hover:text-primary transition-colors">
+                anhqv
+              </h1>
+              <div className="w-2 h-2 rounded-full bg-primary shadow-glow animate-pulse" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black text-accent-cyan tracking-widest uppercase py-0.5 px-2 rounded-md bg-accent-cyan/10 border border-accent-cyan/20">
+                AI PRO NOTE
+              </span>
+            </div>
+          </motion.button>
 
-        {/* Brand */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3 mb-12"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent-pink flex items-center justify-center shadow-glow">
-            <Sparkles size={24} className="text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-text-dim bg-clip-text text-transparent">
-              anhqv
-            </h1>
-            <p className="text-[10px] font-bold text-accent-cyan tracking-widest uppercase">PRO AI NOTE</p>
-          </div>
-        </motion.div>
+          {/* Close button for mobile/tablet */}
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl bg-white/5 text-text-dim hover:text-white transition-colors border-none"
+          >
+            <X size={24} />
+          </button>
+        </div>
 
         {/* Primary Navigation */}
         <nav className="space-y-2 flex-1">
@@ -100,7 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, isOp
               }}
               onClick={() => {
                 onViewChange(item.id as any);
-                if (window.innerWidth < 1024) onClose();
+                onClose();
               }}
               className={`
                 w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group relative

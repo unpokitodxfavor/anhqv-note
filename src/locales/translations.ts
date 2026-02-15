@@ -101,6 +101,8 @@ export const translations = {
         no_events: "No upcoming events",
         no_emails: "No new emails",
         sign_in_google_to_see: "Sign in with Google to see your events and emails",
+        change_status: "Change Status",
+        delete: "Delete",
     },
     es: {
         // Auth & General
@@ -204,6 +206,8 @@ export const translations = {
         no_events: "No hay eventos próximos",
         no_emails: "No hay correos nuevos",
         sign_in_google_to_see: "Inicia sesión con Google para ver tus eventos y correos",
+        change_status: "Cambiar Estado",
+        delete: "Eliminar",
     }
 };
 

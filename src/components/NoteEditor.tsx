@@ -18,13 +18,26 @@ interface NoteEditorProps {
     isOpen: boolean;
     onClose: () => void;
     initialTitle?: string;
+    onAddTask?: (taskData: { title: string; description: string; status: 'todo'; priority: 'med' }) => void;
 }
 
-export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initialTitle = "New Note" }) => {
-    const { t } = useLanguage();
+export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initialTitle = "New Note", onAddTask }) => {
+    const { t, language } = useLanguage();
     const [title, setTitle] = useState(initialTitle === "New Note" ? t('new_task') : initialTitle);
     const [content, setContent] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleSave = () => {
+        if (onAddTask && title.trim()) {
+            onAddTask({
+                title,
+                description: content,
+                status: 'todo',
+                priority: 'med'
+            });
+            onClose();
+        }
+    };
 
     const handleAISimplify = () => {
         setIsProcessing(true);
@@ -134,6 +147,12 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initial
                                 <button className="p-3 rounded-xl hover:bg-white/10 text-text-dim hover:text-white transition-colors">
                                     <LinkIcon size={18} />
                                 </button>
+                                <button
+                                    onClick={handleSave}
+                                    className="px-5 py-2.5 rounded-xl bg-secondary/10 text-secondary hover:bg-secondary/20 border border-secondary/20 font-bold text-sm transition-all"
+                                >
+                                    {language === 'es' ? 'Guardar' : 'Save'}
+                                </button>
                                 <div className="w-px h-6 bg-white/10 mx-1" />
                                 <button
                                     onClick={handleAISimplify}
@@ -143,7 +162,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initial
                     ${isProcessing
                                             ? 'bg-primary/40 text-white border-primary cursor-wait animate-pulse'
                                             : 'bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 shadow-sm'}
-                  `}
+                   `}
                                 >
                                     <Sparkles size={16} />
                                     <span>{isProcessing ? t('processing') : t('ai_simplify')}</span>

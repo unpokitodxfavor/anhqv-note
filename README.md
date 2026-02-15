@@ -6,21 +6,27 @@
 
 ## ✨ Características Principales
 
-### 🧠 Editor Inteligente (AI Enhanced)
-- **Simplificación con IA**: Utiliza inteligencia artificial para refinar y resumir tus notas complejas con un solo clic.
-- **Formato Enriquecido**: Toolbar flotante para negritas, cursivas, listas, imágenes y enlaces.
-- **Gestión de Etiquetas Sugeridas**: El sistema sugiere etiquetas basadas en tu contenido para mantener todo organizado.
-- **Colaboración en Tiempo Real**: Visualiza quién más está trabajando en la nota contigo.
+### 🚀 Momento Visual (Visual Momentum)
+El concepto central de **anhqv-note**. No es solo una lista de tareas, es un centro de mando diseñado para darte un impulso constante:
+- **Eficiencia Dinámica**: Un indicador en tiempo real de tu constancia completando tareas.
+- **Victorias Diarias**: Un contador rápido de logros para gestionar tu energía y motivación.
+- **Equilibrio Vital**: Gráfico visual que representa cómo divides tu tiempo entre **Trabajo**, **Aprendizaje** y **Vida Personal**, ayudándote a no descuidar ninguna área.
 
-### 📊 Panel de Control Pro (Dashboard)
-- **Momento Visual**: Gráficos dinámicos que muestran tu eficiencia y progreso diario.
-- **Enfoque Diario**: Una lista curada de tus tareas más importantes con niveles de prioridad (Alta, Media, Baja).
-- **Métricas de Rendimiento**: Seguimiento de tareas completadas y objetivos restantes para el día.
+### 🧠 Editor Inteligente (AI Enhanced)
+- **Simplificación con IA**: Refina y resume notas complejas con un solo clic.
+- **Gestión de Etiquetas**: Sugerencias automáticas basadas en el contenido.
+- **Formato Enriquecido**: Toolbar flotante para una edición premium.
+
+### 🎯 Enfoque de Hoy (Today's Focus)
+Centrado en la metodología de los "Big 3". Clasifica tus tareas críticas por prioridad (Alta, Media, Baja) para maximizar el impacto sin abrumarte.
 
 ### 📈 Análisis de Productividad
-- **Radar de Maestría**: Visualiza tus fortalezas en áreas críticas como Consistencia, Disciplina, Visión y Ejecución.
-- **Mapa de Actividad (Heatmap)**: Registro visual de tu productividad durante los últimos 365 días.
-- **Hitos y Logros**: Sistema de medallas y registro de hitos recientes para mantener la motivación.
+- **Radar de Maestría**: Mide habilidades como Disciplina, Visión y Ejecución.
+- **Mapa de Actividad**: Visualiza tu consistencia a lo largo de los últimos 365 días.
+- **Hitos y Logros**: Sistema de recompensas visuales para celebrar tu progreso.
+
+### 🌐 Google Workspace Integration
+Sincronización directa con **Google Calendar** y **Google Tasks** para que toda tu planificación esté unificada en un solo lugar.
 
 ### 🌍 Internacionalización Total
 - Soporte completo para **Español** e **Inglés**.

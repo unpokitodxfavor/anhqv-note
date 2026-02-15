@@ -1,5 +1,5 @@
 /**
- * Service to interact with Google APIs (Calendar and Gmail)
+ * Service to interact with Google APIs (Calendar and Tasks)
  */
 
 export interface CalendarEvent {
@@ -12,28 +12,47 @@ export interface CalendarEvent {
     description?: string;
 }
 
-export interface GmailThread {
+export interface GoogleCalendar {
     id: string;
-    snippet: string;
-    subject: string;
-    from: string;
+    summary: string;
+    primary?: boolean;
+}
+
+export interface GoogleTask {
+    id: string;
+    title: string;
+    notes?: string;
+    status: 'needsAction' | 'completed';
+    completed?: string;
 }
 
 export const fetchCalendarEvents = async (token: string): Promise<CalendarEvent[]> => {
     try {
-        const now = new Date().toISOString();
-        const response = await fetch(
-            `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${now}&maxResults=5&orderBy=startTime&singleEvents=true`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfPeriod = new Date();
+        endOfPeriod.setDate(endOfPeriod.getDate() + 7);
+        endOfPeriod.setHours(23, 59, 59, 999);
+
+        const timeMin = encodeURIComponent(startOfDay.toISOString());
+        const timeMax = encodeURIComponent(endOfPeriod.toISOString());
+
+        const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMin}&timeMax=${timeMax}&maxResults=20&orderBy=startTime&singleEvents=true`;
+
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
         );
 
         if (!response.ok) {
-            const errorBody = await response.json();
-            throw new Error(errorBody.error?.message || 'Failed to fetch calendar events');
+            const errorBody = await response.json().catch(() => ({}));
+            const message = errorBody.error?.message || 'Failed to fetch calendar events';
+            const error: any = new Error(message);
+            error.status = response.status;
+            throw error;
         }
 
         const data = await response.json();
@@ -44,11 +63,28 @@ export const fetchCalendarEvents = async (token: string): Promise<CalendarEvent[
     }
 };
 
-export const fetchGmailThreads = async (token: string): Promise<GmailThread[]> => {
+export const fetchUserCalendars = async (token: string): Promise<GoogleCalendar[]> => {
     try {
-        // Fetch last 5 messages from inbox
-        const listResponse = await fetch(
-            'https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=5&q=label:inbox',
+        const response = await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) return [];
+        const data = await response.json();
+        return data.items || [];
+    } catch (error) {
+        console.error("Error fetching calendar list:", error);
+        return [];
+    }
+};
+
+export const fetchGoogleTasks = async (token: string): Promise<GoogleTask[]> => {
+    try {
+        // Fetch from the @default task list
+        const response = await fetch(
+            'https://tasks.googleapis.com/tasks/v1/lists/@default/tasks?showCompleted=true&maxResults=50',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -56,41 +92,16 @@ export const fetchGmailThreads = async (token: string): Promise<GmailThread[]> =
             }
         );
 
-        if (!listResponse.ok) {
-            throw new Error('Failed to fetch Gmail messages');
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error("Google Tasks API error:", errorData);
+            return [];
         }
 
-        const listData = await listResponse.json();
-        const messages = listData.messages || [];
-
-        const threadDetails = await Promise.all(
-            messages.map(async (msg: { id: string }) => {
-                const detailResponse = await fetch(
-                    `https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                const detailData = await detailResponse.json();
-
-                const headers = detailData.payload.headers;
-                const subject = headers.find((h: any) => h.name === 'Subject')?.value || 'No Subject';
-                const from = headers.find((h: any) => h.name === 'From')?.value || 'Unknown';
-
-                return {
-                    id: detailData.id,
-                    snippet: detailData.snippet,
-                    subject,
-                    from,
-                };
-            })
-        );
-
-        return threadDetails;
+        const data = await response.json();
+        return data.items || [];
     } catch (error) {
-        console.error("Error fetching Gmail:", error);
+        console.error("Error fetching Google Tasks:", error);
         return [];
     }
 };
