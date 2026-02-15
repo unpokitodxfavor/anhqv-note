@@ -18,13 +18,14 @@ interface NoteEditorProps {
     isOpen: boolean;
     onClose: () => void;
     initialTitle?: string;
-    onAddTask?: (taskData: { title: string; description: string; status: 'todo'; priority: 'med' }) => void;
+    onAddTask?: (taskData: { title: string; description: string; status: 'todo'; priority: 'med'; area: string }) => void;
 }
 
 export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initialTitle = "New Note", onAddTask }) => {
     const { t, language } = useLanguage();
     const [title, setTitle] = useState(initialTitle === "New Note" ? t('new_task') : initialTitle);
     const [content, setContent] = useState('');
+    const [area, setArea] = useState('Personal');
     const [isProcessing, setIsProcessing] = useState(false);
 
     const handleSave = () => {
@@ -33,7 +34,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initial
                 title,
                 description: content,
                 status: 'todo',
-                priority: 'med'
+                priority: 'med',
+                area
             });
             onClose();
         }
@@ -124,6 +126,25 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({ isOpen, onClose, initial
                                                 className="w-2 bg-accent-cyan/40 rounded-t-full hover:bg-accent-cyan transition-colors"
                                                 style={{ height: `${h * 10}%` }}
                                             ></div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Area Selector */}
+                                <div className="mt-8 flex flex-col gap-4">
+                                    <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.2em]">{language === 'es' ? 'PROYECTO / ÁREA' : 'PROJECT / AREA'}</span>
+                                    <div className="flex flex-wrap gap-2">
+                                        {['Work', 'Learning', 'Personal', 'Vision'].map((a) => (
+                                            <button
+                                                key={a}
+                                                onClick={() => setArea(a)}
+                                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${area === a
+                                                    ? 'bg-primary text-white border-primary shadow-glow'
+                                                    : 'bg-white/5 text-text-dim border-white/10 hover:border-white/20'
+                                                    }`}
+                                            >
+                                                {a === 'Work' ? t('area_work') : a === 'Learning' ? t('area_learning') : a === 'Personal' ? t('area_personal') : 'Vision'}
+                                            </button>
                                         ))}
                                     </div>
                                 </div>

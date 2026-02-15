@@ -34,6 +34,7 @@ interface Task {
     priority: 'high' | 'med' | 'low';
     aiInsight?: string;
     userId: string;
+    area: string;
     isGoogleTask?: boolean;
 }
 
@@ -240,16 +241,21 @@ export const Dashboard: React.FC = () => {
                                 className="glass p-5 rounded-[24px] border border-white/5 hover:border-white/10 hover:bg-white/5 cursor-pointer flex items-center justify-between group transition-all"
                             >
                                 <div className="flex items-center gap-5">
-                                    <div className={`w-3 h-3 rounded-full border-2 ${task.priority === 'high' ? 'border-accent-pink shadow-[0_0_10px_rgba(236,72,153,0.3)]' :
-                                        task.priority === 'med' ? 'border-primary shadow-[0_0_10px_rgba(139,92,246,0.3)]' :
-                                            'border-accent-cyan shadow-[0_0_10px_rgba(6,182,212,0.3)]'
+                                    <div className={`w-3 h-3 rounded-full border-2 ${task.priority === 'high' ? 'border-primary shadow-[0_0_10px_rgba(99,102,241,0.3)]' :
+                                        task.priority === 'med' ? 'border-accent-cyan shadow-[0_0_10px_rgba(34,211,238,0.3)]' :
+                                            'border-secondary shadow-[0_0_10px_rgba(16,185,129,0.3)]'
                                         }`} />
                                     <div>
                                         <p className="font-bold text-white mb-1">{task.title}</p>
                                         <div className="flex items-center gap-3">
                                             <span className="text-[10px] font-black text-accent-cyan uppercase tracking-widest">{task.area}</span>
                                             <span className="w-1 h-1 rounded-full bg-white/20" />
-                                            <span className="text-[10px] font-black text-text-dim/60 uppercase tracking-widest">{task.tag}</span>
+                                            <span className={`text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider border ${task.priority === 'high' ? 'bg-accent-pink text-white border-accent-pink/20' :
+                                                task.priority === 'med' ? 'bg-primary text-white border-primary/20' :
+                                                    'bg-accent-cyan text-slate-900 border-accent-cyan/20'
+                                                }`}>
+                                                {task.tag}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -392,9 +398,9 @@ export const Dashboard: React.FC = () => {
                                         <div className="relative glass p-6 rounded-[31px] border border-white/5 h-full bg-bg-sidebar/40 backdrop-blur-md">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div className="flex flex-wrap gap-2">
-                                                    <span className={`text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider border ${task.priority === 'high' ? 'bg-accent-pink/10 text-accent-pink border-accent-pink/20' :
-                                                        task.priority === 'med' ? 'bg-primary/10 text-primary border-primary/20' :
-                                                            'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20'
+                                                    <span className={`text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider border ${task.priority === 'high' ? 'bg-accent-pink text-white border-accent-pink/20' :
+                                                        task.priority === 'med' ? 'bg-primary text-white border-primary/20' :
+                                                            'bg-accent-cyan text-slate-900 border-accent-cyan/20'
                                                         }`}>
                                                         {t(`priority_${task.priority}` as any)}
                                                     </span>
@@ -460,6 +466,30 @@ export const Dashboard: React.FC = () => {
         );
     };
 
+    const calculatedProjects = React.useMemo(() => {
+        const areaGroups: Record<string, { total: number, done: number }> = {};
+
+        // Merge DB tasks with Google tasks for progress calculation
+        const allTasks = [...tasks, ...googleData.tasks.map(t => ({
+            ...t,
+            area: 'Work', // Google tasks default to Work
+            status: t.status === 'completed' ? 'done' : 'todo'
+        }))];
+
+        allTasks.forEach(task => {
+            const area = (task as any).area || 'General';
+            if (!areaGroups[area]) areaGroups[area] = { total: 0, done: 0 };
+            areaGroups[area].total++;
+            if (task.status === 'done') areaGroups[area].done++;
+        });
+
+        return Object.entries(areaGroups).map(([title, stats], i) => ({
+            title,
+            progress: `${Math.round((stats.done / stats.total) * 100)}%`,
+            color: i % 3 === 0 ? 'var(--primary)' : i % 3 === 1 ? 'var(--accent-cyan)' : 'var(--secondary)'
+        }));
+    }, [tasks, googleData.tasks]);
+
     const renderProjects = () => (
         <div className="space-y-10">
             <motion.section
@@ -467,11 +497,7 @@ export const Dashboard: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-                {[
-                    { title: 'Rediseño UI', progress: '85%', color: 'var(--primary)' },
-                    { title: 'Google API', progress: '40%', color: 'var(--accent-cyan)' },
-                    { title: 'Documentación', progress: '100%', color: 'var(--secondary)' },
-                ].map((project, i) => (
+                {calculatedProjects.length > 0 ? calculatedProjects.map((project, i) => (
                     <motion.div
                         key={i}
                         whileHover={{ y: -10 }}
@@ -492,7 +518,13 @@ export const Dashboard: React.FC = () => {
                             <span style={{ color: project.color }}>{project.progress}</span>
                         </div>
                     </motion.div>
-                ))}
+                )) : (
+                    <div className="col-span-full py-20 text-center glass rounded-[32px] border border-white/5">
+                        <p className="text-text-dim font-black uppercase tracking-widest opacity-60">
+                            {language === 'es' ? 'No hay proyectos activos todavía' : 'No active projects yet'}
+                        </p>
+                    </div>
+                )}
             </motion.section>
         </div>
     );
@@ -691,7 +723,7 @@ export const Dashboard: React.FC = () => {
             <NoteEditor
                 isOpen={isEditorOpen}
                 onClose={() => setIsEditorOpen(false)}
-                onAddTask={addTask}
+                onAddTask={(taskData: any) => addTask(taskData)}
             />
         </div >
     );

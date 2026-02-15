@@ -102,8 +102,8 @@ export const Analytics: React.FC = () => {
                                         className="w-4 h-4 rounded-[3px] transition-all hover:scale-125 cursor-pointer"
                                         style={{
                                             backgroundColor: intensity > 0.8 ? 'var(--primary)' :
-                                                intensity > 0.5 ? 'rgba(127, 19, 236, 0.4)' :
-                                                    intensity > 0.2 ? 'rgba(127, 19, 236, 0.1)' : 'rgba(255, 255, 255, 0.05)'
+                                                intensity > 0.5 ? 'rgba(99, 102, 241, 0.4)' :
+                                                    intensity > 0.2 ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255, 255, 255, 0.05)'
                                         }}
                                     />
                                 );

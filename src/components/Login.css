@@ -45,9 +45,9 @@
 }
 
 .login-input:focus {
-    border-color: #7f13ec !important;
+    border-color: #6366f1 !important;
     background: rgba(36, 26, 50, 1) !important;
-    box-shadow: 0 0 0 2px rgba(127, 19, 236, 0.3) !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
 }
 
 .login-input::placeholder {

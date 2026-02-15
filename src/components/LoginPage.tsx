@@ -20,7 +20,7 @@ export const LoginPage: React.FC = () => {
                 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 className="absolute"
-                style={{ top: '-6rem', left: '-6rem', width: '24rem', height: '24rem', backgroundColor: 'rgba(127, 19, 236, 0.2)', borderRadius: '9999px', filter: 'blur(100px)' }}
+                style={{ top: '-6rem', left: '-6rem', width: '24rem', height: '24rem', backgroundColor: 'rgba(99, 102, 241, 0.2)', borderRadius: '9999px', filter: 'blur(100px)' }}
             />
             <motion.div
                 animate={{

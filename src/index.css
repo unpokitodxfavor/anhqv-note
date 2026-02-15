@@ -1,26 +1,26 @@
 :root {
   /* Color Palette - Premium Dark Mode */
-  --bg-main: #0a0514;
-  --bg-sidebar: #0d071a;
+  --bg-main: #020617;
+  --bg-sidebar: #050b1d;
   --bg-glass: rgba(255, 255, 255, 0.05);
   --bg-glass-heavy: rgba(255, 255, 255, 0.1);
 
-  --primary: #7f13ec;
-  --primary-glow: rgba(127, 19, 236, 0.5);
-  --secondary: #0df259;
-  --secondary-glow: rgba(13, 242, 89, 0.4);
-  --accent-cyan: #00f2ff;
-  --accent-pink: #ff007a;
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.4);
+  --secondary: #10b981;
+  --secondary-glow: rgba(16, 185, 129, 0.3);
+  --accent-cyan: #22d3ee;
+  --accent-pink: #0ea5e9;
 
   --text-main: #f8f9fa;
   --text-muted: #a0a0b8;
   --text-dim: #6b6b83;
 
   --border-glass: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(127, 19, 236, 0.3);
+  --border-accent: rgba(99, 102, 241, 0.3);
 
   --shadow-glow: 0 0 20px var(--primary-glow);
-  --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.8);
 
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --font-fancy: 'Outfit', 'Plus Jakarta Sans', sans-serif;
@@ -122,7 +122,7 @@ h4 {
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(127, 19, 236, 0.15) 0%,
+      rgba(99, 102, 241, 0.15) 0%,
       transparent 70%);
   opacity: 0;
   transition: opacity 0.3s;
@@ -709,15 +709,15 @@ h4 {
 }
 
 .bg-primary\/10 {
-  background: rgba(127, 19, 236, 0.1);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .bg-primary\/20 {
-  background: rgba(127, 19, 236, 0.2);
+  background: rgba(99, 102, 241, 0.2);
 }
 
 .bg-primary\/40 {
-  background: rgba(127, 19, 236, 0.4);
+  background: rgba(99, 102, 241, 0.4);
 }
 
 .bg-accent-cyan {
@@ -786,7 +786,7 @@ h4 {
   color: white;
   padding: 10px 24px;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 15px rgba(127, 19, 236, 0.4);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -795,7 +795,7 @@ h4 {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(127, 19, 236, 0.6);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
 }
 
 .border-none {
@@ -835,7 +835,7 @@ h4 {
 }
 
 .border-primary\/20 {
-  border-color: rgba(127, 19, 236, 0.2);
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
 .border-accent-cyan\/20 {
